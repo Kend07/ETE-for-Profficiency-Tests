@@ -85,14 +85,19 @@
       }
     });
 
-    // Hover (desktop) sobre el header
-    const header = document.getElementById('site-header');
-    if (header) {
-      header.addEventListener('mouseenter', openCoursesDropdown);
-      header.addEventListener('mouseleave', closeCoursesDropdown);
+    // Hover (desktop) SOLO sobre el trigger y su panel: no sobre todo el header
+    const dropdownWrap = coursesTrigger.parentElement;
+    if (dropdownWrap) {
+      dropdownWrap.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(min-width: 1024px)').matches) {
+          openCoursesDropdown();
+        }
+      });
+      dropdownWrap.addEventListener('mouseleave', closeCoursesDropdown);
     }
 
     // Cierre al hacer clic fuera (se respetan los botones "abrir menú de cursos")
+    const header = document.getElementById('site-header');
     document.addEventListener('click', (e) => {
       if (e.target.closest('.js-open-courses-menu')) return;
       if (!header || !header.contains(e.target)) closeCoursesDropdown();

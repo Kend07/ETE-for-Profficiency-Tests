@@ -1,9 +1,9 @@
 # ==========================================================================
-# ETE for Proficiency Tests — Deploy a GitHub Pages
+# ETE for Proficiency Tests - Deploy a GitHub Pages
 # --------------------------------------------------------------------------
-# Despliega el sitio estático en cada push a `main` (y manualmente).
-#
-# Requisito en el repo: GitHub → Settings → Pages → Source: "GitHub Actions"
+# Despliega el sitio estatico en cada push a `main` (y manualmente).
+# Nota: `enablement: true` en configure-pages habilita GitHub Pages de forma
+# automatica (no hace falta activarlo a mano en Settings > Pages).
 # ==========================================================================
 
 name: Deploy to GitHub Pages
@@ -13,7 +13,7 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Permisos mínimos: solo lectura del contenido y escritura en Pages.
+# Permisos minimos: solo lectura del contenido y escritura en Pages.
 permissions:
   contents: read
   pages: write
@@ -26,21 +26,23 @@ concurrency:
 
 jobs:
   # ------------------------------------------------------------------------
-  # Build: prepara el artefacto estático.
+  # Build: prepara el artefacto estatico.
   # ------------------------------------------------------------------------
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Configurar GitHub Pages (habilita Pages + build con Actions)
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
 
       - name: Subir artefacto (archivos del sitio)
         uses: actions/upload-pages-artifact@v3
         with:
-          # Publica la raíz del repo. Si se agrega un build (p. ej. Tailwind
+          # Publica la raiz del repo. Si se agrega un build (p. ej. Tailwind
           # purgado), cambiar por la ruta del artefacto resultante.
           path: .
 
