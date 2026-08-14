@@ -8,6 +8,9 @@ Este repositorio contiene **aplicaciones web interactivas y quizzes de repaso** 
 El objetivo de este proyecto es brindar herramientas visuales, dinámicas y de autocorrección para que cualquier estudiante pueda repasar temas clave, vocabulario, estructuras gramaticales e intenciones comunicativas antes de sus evaluaciones orales y escritas.
 
 ---
+# 🔓 Licencia y Open Source
+Este proyecto es 100% Open Source y de libre acceso para la comunidad académica. Puedes usarlo, compartirlo, modificarlo y adaptarlo a las necesidades de tu universidad o curso sin ningún costo.
+
 
 ## 🌐 ¿Cómo utilizar las aplicaciones? 
 
