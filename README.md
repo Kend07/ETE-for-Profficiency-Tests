@@ -15,13 +15,8 @@ Aplicaciones web interactivas y quizzes de repaso construidos a partir de los **
 - ♿ **Accesibilidad WCAG 2.1 AA**: skip-links, foco visible, `aria-disabled` en cursos no disponibles y soporte para lectores de pantalla.
 - 🔒 **Seguridad**: Content Security Policy (CSP), `rel="noopener noreferrer"` en enlaces externos y sin dependencias de runtime.
 
-## 🚀 Curso disponible
-
-| Curso | Código | Acceso |
-|-------|--------|--------|
-| **Inglés V** | IDTEC05 | [Ingresar al quiz](courses/ingles_v.html) — 12 semanas, 24 ejercicios |
-
-> 🕓 **Próximamente:** Inglés I, II, III, IV y VI. ¡Tu contribución los acelera!
+## LINK AL PROYECTO
+https://kend07.github.io/ETE-for-Profficiency-Tests/
 
 ## 🗂️ Estructura del proyecto
 
