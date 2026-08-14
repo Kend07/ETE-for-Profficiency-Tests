@@ -12,6 +12,33 @@
    manejadores onclick declarativos del HTML (uso interno del proyecto).
    ========================================================================== */
 
+    /* ------------------------------------------------------------------------
+       showToast — notificaciones con Toastify (CDN)
+       Tipos: 'info', 'success', 'warning', 'error'. Si el CDN de Toastify no
+       cargó, cae a window.alert para no romper el flujo del quiz.
+       ------------------------------------------------------------------------ */
+    function showToast(message, type = 'info') {
+      const palette = {
+        info: 'linear-gradient(to right, #0056B3, #003366)',
+        success: 'linear-gradient(to right, #16a34a, #15803d)',
+        warning: 'linear-gradient(to right, #d97706, #b45309)',
+        error: 'linear-gradient(to right, #dc2626, #b91c1c)'
+      };
+
+      if (typeof Toastify === 'undefined') {
+        window.alert(message);
+        return;
+      }
+
+      Toastify({
+        text: message,
+        duration: 3500,
+        gravity: 'top',
+        position: 'right',
+        style: { background: palette[type] || palette.info }
+      }).showToast();
+    }
+
     // DATA STRUCTURE FOR THE 12 CONTENT WEEKS (2 exercises each)
     const quizData = [
       {
@@ -466,7 +493,7 @@
       const fbBox = document.getElementById(`${saId}_feedback`);
 
       if (!inputVal) {
-        alert("Por favor escribe una respuesta antes de evaluar.");
+        showToast('Por favor escribe una respuesta antes de evaluar.', 'warning');
         return;
       }
 
@@ -681,4 +708,10 @@
       document.getElementById('stat-completed').textContent = `${completedCount} / 24`;
       document.getElementById('stat-mc-correct').textContent = `${mcCorrectCount} / 12`;
       document.getElementById('stat-sa-achieved').textContent = `${saAchievedCount} / 12`;
+
+      // Felicitación (una sola vez por sesión)
+      if (completedCount === 24 && !window.__eteAllDone) {
+        window.__eteAllDone = true;
+        showToast('¡Felicitaciones! Completaste los 24 ejercicios del curso.', 'success');
+      }
     }

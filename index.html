@@ -38,8 +38,8 @@
        ====================================================================== -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
-    style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+    script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
     font-src https://cdnjs.cloudflare.com data:;
     img-src 'self' data:;
     connect-src 'self';
@@ -73,6 +73,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/dist/toastify.min.css" rel="stylesheet">
   <link href="css/main.css" rel="stylesheet">
 </head>
 
@@ -550,6 +551,7 @@
   </footer>
 
   <!-- Lógica de interacción de la landing -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/dist/toastify.min.js"></script>
   <script src="js/main.js"></script>
   <script>
     // Año dinámico del footer

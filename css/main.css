@@ -72,13 +72,14 @@ select:focus-visible,
 }
 
 /* --------------------------------------------------------------------------
-   Elementos deshabilitados / "Próximamente": nunca reciben interacción.
-   Combinado con aria-disabled="true" y la prevención vía JS.
+   Elementos deshabilitados / "Próximamente": se ven atenuados y con cursor
+   "no permitido". El clic y el teclado se interceptan vía JS, que además
+   muestra un toast de aviso. (No se usa pointer-events: none para que el
+   clic llegue al manejador y el usuario reciba el toast.)
    -------------------------------------------------------------------------- */
 [aria-disabled='true'] {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: none;
   user-select: none;
 }
 
