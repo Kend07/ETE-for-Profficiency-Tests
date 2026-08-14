@@ -1,0 +1,40 @@
+{
+  "name": "ete-for-proficiency-tests",
+  "version": "1.0.0",
+  "description": "Hub open source de preparación para exámenes universitarios (UTN / Inglés): quizzes interactivos, syllabus abiertos y evaluación por intención comunicativa.",
+  "keywords": [
+    "utn",
+    "ingles",
+    "quiz",
+    "syllabus",
+    "github-pages",
+    "education",
+    "open-source"
+  ],
+  "license": "MIT",
+  "author": "Comunidad ETE for Proficiency Tests",
+  "homepage": "https://github.com/Kend07/ETE-for-Profficiency-Tests",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kend07/ETE-for-Profficiency-Tests.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kend07/ETE-for-Profficiency-Tests/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "live-server --port=5500 --no-browser",
+    "dev": "live-server --port=5500",
+    "lint": "html-validate \"*.html\" \"courses/*.html\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "preview": "live-server --port=5500 --no-browser"
+  },
+  "devDependencies": {
+    "html-validate": "^8.24.0",
+    "live-server": "^1.2.2",
+    "prettier": "^3.3.3"
+  }
+}

@@ -1,0 +1,59 @@
+# ==========================================================================
+# ETE for Proficiency Tests — Deploy a GitHub Pages
+# --------------------------------------------------------------------------
+# Despliega el sitio estático en cada push a `main` (y manualmente).
+#
+# Requisito en el repo: GitHub → Settings → Pages → Source: "GitHub Actions"
+# ==========================================================================
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permisos mínimos: solo lectura del contenido y escritura en Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un solo deployment a la vez; si llega uno nuevo, cancela el anterior.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # ------------------------------------------------------------------------
+  # Build: prepara el artefacto estático.
+  # ------------------------------------------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefacto (archivos del sitio)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Publica la raíz del repo. Si se agrega un build (p. ej. Tailwind
+          # purgado), cambiar por la ruta del artefacto resultante.
+          path: .
+
+  # ------------------------------------------------------------------------
+  # Deploy: publica el artefacto en GitHub Pages.
+  # ------------------------------------------------------------------------
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

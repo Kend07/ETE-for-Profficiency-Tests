@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ETE Hub">
+  <rect width="64" height="64" rx="12" fill="#003366"/>
+  <path d="M32 12 4 26l28 14 16-8v10h8V34l-8-4-16-8 20-10 28 14-28 14-16-8-8 4v10l-4 2-8-4V32l8-4 8-4-12-6-28 14L32 4l28 14L32 12z" fill="none"/>
+  <path d="M10 34l22 11 22-11v8L32 53 10 42z" fill="#d4af37"/>
+  <rect x="26" y="41" width="12" height="12" rx="2" fill="#d4af37" transform="rotate(45 32 47)"/>
+  <path d="M32 12 4 26l28 14 28-14L32 12z" fill="#f0f4f8"/>
+</svg>
