@@ -1,6 +1,6 @@
 # 🎓 ETE for Proficiency Tests
 
-> **Exam Training for Professional Tests** — Hub open source de preparación para **exámenes de suficiencia de inglés** de cualquier institución. El proyecto arranca con el programa de **Inglés de la UTN**.
+> **Exam Training for Professional Tests** — Hub open source de preparación para **exámenes de suficiencia de inglés** de cualquier institución.
 
 > 🌀 **Este proyecto es principalmente vibe-coded**  (prompt-driven). Todo el código se revisa, valida y mantiene con criterio humano. Todo es público y auditable en este repositorio.
 

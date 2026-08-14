@@ -63,7 +63,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     Dropdown "Cursos" (desktop): clic, Escape y cierre por clic externo
+     Dropdown "Cursos" (desktop): se abre SOLO con clic o teclado (Enter/
+     Espacio). No se usa hover para abrir: asi es imposible que se despliegue
+     al pasar el mouse por el header. Cierre por Escape o clic externo.
      ------------------------------------------------------------------------ */
   function initCoursesDropdown() {
     coursesTrigger = document.getElementById('courses-trigger');
@@ -84,17 +86,6 @@
         coursesTrigger.focus();
       }
     });
-
-    // Hover (desktop) SOLO sobre el trigger y su panel: no sobre todo el header
-    const dropdownWrap = coursesTrigger.parentElement;
-    if (dropdownWrap) {
-      dropdownWrap.addEventListener('mouseenter', () => {
-        if (window.matchMedia('(min-width: 1024px)').matches) {
-          openCoursesDropdown();
-        }
-      });
-      dropdownWrap.addEventListener('mouseleave', closeCoursesDropdown);
-    }
 
     // Cierre al hacer clic fuera (se respetan los botones "abrir menú de cursos")
     const header = document.getElementById('site-header');
