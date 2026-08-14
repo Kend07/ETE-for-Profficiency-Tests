@@ -2,7 +2,7 @@
 
 > **Exam Training for Professional Tests** — Hub open source de preparación para **exámenes de suficiencia de inglés** de cualquier institución.
 
-> 🌀 **Este proyecto es principalmente vibe-coded**  (prompt-driven). Todo el código se revisa, valida y mantiene con criterio humano. Todo es público y auditable en este repositorio.
+> **Este proyecto es principalmente vibe-coded**  (prompt-driven). Todo el código se revisa, valida y mantiene con criterio humano. Todo es público y auditable en este repositorio.
 
 Aplicaciones web interactivas y quizzes de repaso construidos a partir de los **syllabus oficiales** de los cursos. Todo el material es **gratuito, abierto y colaborativo** (Licencia MIT), desplegado automáticamente en **GitHub Pages**.
 
@@ -18,7 +18,7 @@ Aplicaciones web interactivas y quizzes de repaso construidos a partir de los **
 ## LINK AL PROYECTO
 https://kend07.github.io/ETE-for-Profficiency-Tests/
 
-## 🗂️ Estructura del proyecto
+## Estructura del proyecto
 
 ```text
 ETE-for-Profficiency-Tests/
@@ -73,7 +73,7 @@ npm run dev        # → http://localhost:5500
 | `npm run format`    | Formatea el código con Prettier                     |
 | `npm run format:check` | Verifica el formato sin modificar               |
 
-## 🌐 Despliegue (GitHub Pages)
+## Despliegue (GitHub Pages)
 
 El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) publica el sitio en cada push a `main`:
 
@@ -84,7 +84,7 @@ El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) publi
 
 > **Nota:** el proyecto usa rutas **relativas** para que funcione igual en local (`file://`) y en GitHub Pages (project site).
 
-## 🤝 Contribuciones
+## Contribuciones
 
 ¡Las contribuciones son bienvenidas! Para colaborar:
 
@@ -95,20 +95,14 @@ El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) publi
 
 Consulta [`CONTRIBUTING.md`](CONTRIBUTING.md) para más detalles.
 
-## 🛡️ Seguridad y buenas prácticas
+## Seguridad y buenas prácticas
 
 - **CSP** vía meta tag: se restringen scripts, estilos y conexiones a orígenes confiables (mitigación XSS).
 - La app usa `unsafe-inline` por `onclick` declarativos y la config inline de Tailwind **CDN**; si se desea endurecer en producción, se recomienda mover los handlers a `addEventListener` y usar hashes/nonces.
 - Enlaces externos siempre con `rel="noopener noreferrer"`.
 
-## ⚖️ Licencia
+## Licencia
 
 Distribuido bajo la [Licencia MIT](LICENSE). Libre de usar, modificar y compartir conservando el aviso de copyright.
 
-## 🏛️ Créditos institucionales
 
-Material de estudio derivado de los programas oficiales de la **Universidad Técnica Nacional (UTN)** — **Programa Institucional de Idiomas para el Trabajo (PIT)**. Proyecto educativo comunitario, **no afiliado oficialmente** a la institución.
-
----
-
-⭐ ¿Te resulta útil? Dale una estrella al repositorio — es la mejor forma de apoyar el proyecto.
