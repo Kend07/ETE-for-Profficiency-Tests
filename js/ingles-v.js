@@ -322,11 +322,65 @@
     // USER PROGRESS TRACKING
     let userAnswers = {};
 
+    // PERSISTENCIA DE PROGRESO (localStorage): las respuestas sobreviven a
+    // recargas y visitas, y el quiz se marca como completado al terminarlo.
+    const STORAGE_KEY = 'ete_quiz_progress_ingles_v';
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { userAnswers: {}, completed: false };
+        const data = JSON.parse(raw);
+        return {
+          userAnswers: data.userAnswers && typeof data.userAnswers === 'object' ? data.userAnswers : {},
+          completed: !!data.completed
+        };
+      } catch (e) {
+        return { userAnswers: {}, completed: false };
+      }
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ userAnswers, completed: isQuizCompleted() }));
+      } catch (e) {
+        // Almacenamiento no disponible (p. ej. modo privado): se continúa sin persistir.
+      }
+    }
+
+    function getCompletedCounts() {
+      let completed = 0;
+      let mcCorrect = 0;
+      let saAchieved = 0;
+      quizData.forEach(item => {
+        const mcAns = userAnswers[item.mc.id];
+        if (mcAns !== undefined) {
+          completed++;
+          if (mcAns.isCorrect) mcCorrect++;
+        }
+        const saAns = userAnswers[item.sa.id];
+        if (saAns !== undefined) {
+          completed++;
+          if (saAns.isAchieved) saAchieved++;
+        }
+      });
+      return { completed, mcCorrect, saAchieved };
+    }
+
+    function isQuizCompleted() {
+      return getCompletedCounts().completed === quizData.length * 2;
+    }
+
     // INITIALIZE APP
     window.addEventListener('DOMContentLoaded', () => {
+      const saved = loadProgress();
+      userAnswers = saved.userAnswers;
+      window.__eteAllDone = saved.completed;
+
       renderWeekSelector();
       renderWeeks();
       renderSummaryTable();
+      restoreAnswersFromStorage();
     });
 
     // RENDER SIDEBAR WEEK SELECTOR
@@ -447,18 +501,27 @@
     function checkMC(weekNum, mcId, selectedIdx) {
       const item = quizData.find(w => w.week == weekNum);
       const selectedOpt = item.mc.options[selectedIdx];
-      
-      // Update state
+
+      // Update state + persist
       if (!userAnswers[mcId]) userAnswers[mcId] = {};
       userAnswers[mcId].selected = selectedIdx;
       userAnswers[mcId].isCorrect = selectedOpt.isCorrect;
+      saveProgress();
+
+      applyMCResult(item, selectedIdx);
+    }
+
+    // APPLY MULTIPLE CHOICE RESULT TO UI (also used on restore)
+    function applyMCResult(item, selectedIdx) {
+      const mcId = item.mc.id;
+      const selectedOpt = item.mc.options[selectedIdx];
 
       // Update UI buttons
       item.mc.options.forEach((opt, idx) => {
         const btn = document.getElementById(`${mcId}_opt_${idx}`);
         btn.disabled = true;
         btn.classList.remove('hover:border-utn-blue', 'hover:bg-blue-50/50');
-        
+
         if (idx === selectedIdx) {
           if (opt.isCorrect) {
             btn.className = "w-full text-left p-3.5 rounded-lg border-2 border-green-500 bg-green-50 text-green-900 font-medium text-xs sm:text-sm flex items-start gap-3";
@@ -483,14 +546,13 @@
         fbBox.innerHTML = `<strong><i class="fa-solid fa-circle-xmark"></i> Opción Incorrecta:</strong> ${selectedOpt.rationale}`;
       }
 
-      updateWeekStatus(weekNum);
+      updateWeekStatus(item.week);
     }
 
     // EVALUATE SHORT ANSWER (FOCUS ON INTENT & MEANING)
     function evaluateShortAnswer(weekNum, saId) {
       const item = quizData.find(w => w.week == weekNum);
       const inputVal = document.getElementById(`${saId}_input`).value.trim();
-      const fbBox = document.getElementById(`${saId}_feedback`);
 
       if (!inputVal) {
         showToast('Por favor escribe una respuesta antes de evaluar.', 'warning');
@@ -500,23 +562,33 @@
       // Semantic / Keyword check logic
       const lowerInput = inputVal.toLowerCase();
       const matchedKeywords = item.sa.keywords.filter(kw => lowerInput.includes(kw));
-      const keywordRatio = matchedKeywords.length / Math.min(item.sa.keywords.length, 4);
 
       let intentScore = "Logrado";
-      let badgeColor = "bg-green-100 text-green-800 border-green-300";
-      let icon = "fa-circle-check text-green-600";
-
       if (inputVal.length < 12 || matchedKeywords.length === 0) {
         intentScore = "Revisar Intención";
-        badgeColor = "bg-amber-100 text-amber-800 border-amber-300";
-        icon = "fa-triangle-exclamation text-amber-600";
       }
 
-      // Save state
+      // Save state + persist
       if (!userAnswers[saId]) userAnswers[saId] = {};
       userAnswers[saId].text = inputVal;
       userAnswers[saId].status = intentScore;
       userAnswers[saId].isAchieved = (intentScore === "Logrado");
+      saveProgress();
+
+      renderSAFeedback(item, inputVal, intentScore);
+    }
+
+    // RENDER SHORT ANSWER FEEDBACK (also used on restore)
+    function renderSAFeedback(item, inputVal, intentScore) {
+      const saId = item.sa.id;
+      const fbBox = document.getElementById(`${saId}_feedback`);
+      const isAchieved = (intentScore === "Logrado");
+      const badgeColor = isAchieved
+        ? "bg-green-100 text-green-800 border-green-300"
+        : "bg-amber-100 text-amber-800 border-amber-300";
+      const icon = isAchieved
+        ? "fa-circle-check text-green-600"
+        : "fa-triangle-exclamation text-amber-600";
 
       fbBox.classList.remove('hidden');
       fbBox.innerHTML = `
@@ -543,10 +615,10 @@
             <span class="font-semibold text-slate-700 block mb-1">Autoevaluación de Intención Comunicativa:</span>
             <p class="text-[11px] text-slate-500 mb-2">Compara tu respuesta ("<em>${inputVal}</em>") con la respuesta modelo. ¿Se entiende claramente lo que querías transmitir?</p>
             <div class="flex gap-2">
-              <button onclick="confirmSelfEval('${weekNum}', '${saId}', true)" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded text-[11px] transition">
+              <button onclick="confirmSelfEval('${item.week}', '${saId}', true)" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded text-[11px] transition">
                 ✓ Transmite la idea claramente
               </button>
-              <button onclick="confirmSelfEval('${weekNum}', '${saId}', false)" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded text-[11px] transition">
+              <button onclick="confirmSelfEval('${item.week}', '${saId}', false)" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded text-[11px] transition">
                 ✕ Debo precisar la idea
               </button>
             </div>
@@ -554,7 +626,7 @@
         </div>
       `;
 
-      updateWeekStatus(weekNum);
+      updateWeekStatus(item.week);
     }
 
     // CONFIRM SELF EVALUATION FOR SHORT ANSWER
@@ -562,6 +634,7 @@
       if (!userAnswers[saId]) userAnswers[saId] = {};
       userAnswers[saId].isAchieved = isAchieved;
       userAnswers[saId].status = isAchieved ? "Logrado" : "Revisar Intención";
+      saveProgress();
 
       const fbBox = document.getElementById(`${saId}_feedback`);
       const badge = fbBox.querySelector('span.rounded-full');
@@ -617,14 +690,28 @@
 
     // CALCULATE OVERALL PROGRESS
     function calculateOverallProgress() {
-      let totalCompleted = 0;
-      quizData.forEach(item => {
-        if (userAnswers[item.mc.id] !== undefined) totalCompleted++;
-        if (userAnswers[item.sa.id] !== undefined) totalCompleted++;
-      });
+      const totalExercises = quizData.length * 2;
+      const totalCompleted = getCompletedCounts().completed;
 
-      document.getElementById('overall-progress').textContent = `${totalCompleted} / 24 Completados`;
+      document.getElementById('overall-progress').textContent = `${totalCompleted} / ${totalExercises} Completados`;
+      updateCompletionUI();
       calculateFinalScore();
+    }
+
+    // COMPLETION STATE (badge + save + felicitación única)
+    function updateCompletionUI() {
+      const badge = document.getElementById('completed-badge');
+      const done = isQuizCompleted();
+
+      if (badge) {
+        badge.classList.toggle('hidden', !done);
+        badge.classList.toggle('inline-flex', done);
+      }
+      if (done && !window.__eteAllDone) {
+        window.__eteAllDone = true;
+        saveProgress();
+        showToast(`¡Felicitaciones! Completaste los ${quizData.length * 2} ejercicios del curso.`, 'success');
+      }
     }
 
     // SCROLL TO SPECIFIC WEEK
@@ -672,18 +759,17 @@
 
     // CALCULATE FINAL SCORES
     function calculateFinalScore() {
-      let completedCount = 0;
-      let mcCorrectCount = 0;
-      let saAchievedCount = 0;
+      const counts = getCompletedCounts();
+      const completedCount = counts.completed;
+      const mcCorrectCount = counts.mcCorrect;
+      const saAchievedCount = counts.saAchieved;
 
       quizData.forEach(item => {
         // MC Check
         const mcAns = userAnswers[item.mc.id];
         const mcCell = document.getElementById(`summary-mc-w${item.week}`);
         if (mcAns !== undefined) {
-          completedCount++;
           if (mcAns.isCorrect) {
-            mcCorrectCount++;
             if (mcCell) mcCell.innerHTML = `<span class="bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded text-[11px]"><i class="fa-solid fa-check"></i> Correcto</span>`;
           } else {
             if (mcCell) mcCell.innerHTML = `<span class="bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[11px]"><i class="fa-solid fa-xmark"></i> Incorrecto</span>`;
@@ -694,9 +780,7 @@
         const saAns = userAnswers[item.sa.id];
         const saCell = document.getElementById(`summary-sa-w${item.week}`);
         if (saAns !== undefined) {
-          completedCount++;
           if (saAns.isAchieved) {
-            saAchievedCount++;
             if (saCell) saCell.innerHTML = `<span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[11px]"><i class="fa-solid fa-thumbs-up"></i> Logrado</span>`;
           } else {
             if (saCell) saCell.innerHTML = `<span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[11px]"><i class="fa-solid fa-pen-to-square"></i> Por Mejorar</span>`;
@@ -704,14 +788,48 @@
         }
       });
 
-      // Update Top Stats
-      document.getElementById('stat-completed').textContent = `${completedCount} / 24`;
-      document.getElementById('stat-mc-correct').textContent = `${mcCorrectCount} / 12`;
-      document.getElementById('stat-sa-achieved').textContent = `${saAchievedCount} / 12`;
+      // Update Top Stats (totales dinámicos)
+      const total = quizData.length * 2;
+      document.getElementById('stat-completed').textContent = `${completedCount} / ${total}`;
+      document.getElementById('stat-mc-correct').textContent = `${mcCorrectCount} / ${quizData.length}`;
+      document.getElementById('stat-sa-achieved').textContent = `${saAchievedCount} / ${quizData.length}`;
+    }
 
-      // Felicitación (una sola vez por sesión)
-      if (completedCount === 24 && !window.__eteAllDone) {
-        window.__eteAllDone = true;
-        showToast('¡Felicitaciones! Completaste los 24 ejercicios del curso.', 'success');
+    // RESTORE ANSWERS SAVED IN STORAGE (re-renders the UI state)
+    function restoreAnswersFromStorage() {
+      quizData.forEach(item => {
+        const mcAns = userAnswers[item.mc.id];
+        if (mcAns !== undefined && typeof mcAns.selected === 'number') {
+          applyMCResult(item, mcAns.selected);
+        }
+
+        const saAns = userAnswers[item.sa.id];
+        if (saAns !== undefined && typeof saAns.text === 'string' && saAns.text) {
+          renderSAFeedback(item, saAns.text, saAns.status || 'Revisar Intención');
+        }
+
+        updateWeekStatus(item.week);
+      });
+      calculateOverallProgress();
+    }
+
+    // RESTART QUIZ (clears saved answers and resets the whole UI)
+    function restartQuiz() {
+      if (!window.confirm('¿Seguro que deseas reiniciar el quiz? Se borrarán todas tus respuestas guardadas y el progreso de este curso.')) return;
+
+      userAnswers = {};
+      window.__eteAllDone = false;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {
+        // Almacenamiento no disponible: no hay nada que limpiar.
       }
+
+      renderWeekSelector();
+      renderWeeks();
+      renderSummaryTable();
+      calculateOverallProgress();
+
+      showToast('Quiz reiniciado. ¡Éxitos en tu nuevo intento!', 'info');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }

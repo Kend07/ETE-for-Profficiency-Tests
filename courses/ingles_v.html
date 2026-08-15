@@ -101,10 +101,17 @@
         <div class="bg-blue-900/60 px-4 py-2 rounded-lg border border-blue-400/30 text-center">
           <span class="text-xs text-blue-200 block uppercase font-semibold">Progreso General</span>
           <span id="overall-progress" class="text-lg font-bold text-utn-gold">0 / 24 Completados</span>
+          <span id="completed-badge" class="hidden mt-1 justify-center items-center gap-1 text-[10px] font-extrabold uppercase tracking-wide bg-green-500 text-white px-2 py-0.5 rounded-full">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i> Completado
+          </span>
         </div>
         <button type="button" onclick="scrollToFinalReview()" class="bg-utn-gold hover:bg-yellow-500 text-utn-blue font-bold px-4 py-2 rounded-lg transition-all text-sm shadow flex items-center gap-2">
           <i class="fa-solid fa-chart-check"></i>
           <span>Ir al Reporte Final</span>
+        </button>
+        <button type="button" onclick="restartQuiz()" class="bg-red-600/90 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-lg transition-all text-sm shadow flex items-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Reiniciar Quiz</span>
         </button>
       </div>
     </div>
