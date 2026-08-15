@@ -2,7 +2,7 @@
 
 ¡Gracias por querer mejorar el hub! Este proyecto es 100% comunitario y toda ayuda suma: corregir ejercicios, agregar syllabus, mejorar accesibilidad o traducir contenido.
 
-## 🧑‍💻 Flujo de trabajo
+## Flujo de trabajo
 
 1. **Fork** del repositorio.
 2. Crea una rama descriptiva:
@@ -33,7 +33,7 @@
 | **Docs** | Ampliar `README.md`, `syllabi/README.md` o esta guía |
 | **DevOps** | Optimizar `.github/workflows/deploy.yml` o el pipeline de linting |
 
-## ✅ Convenciones
+## Convenciones
 
 - **HTML:** semántica correcta (`header`, `main`, `section`, `footer`), `aria-*` donde aplique, foco visible.
 - **JS:** funciones globales únicamente cuando sean requeridas por `onclick` declarativos; explicar con comentarios el *porqué* de cada decisión.
@@ -41,7 +41,7 @@
 - **Enlaces externos:** siempre `rel="noopener noreferrer"`.
 - **Idioma:** el contenido pedagógico de los quizzes se escribe en inglés; la documentación del proyecto, en español.
 
-## 💬 Reporte de issues
+## Reporte de issues
 
 Antes de abrir un issue, busca si ya existe uno similar. Incluye siempre:
 
