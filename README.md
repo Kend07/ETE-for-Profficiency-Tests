@@ -8,12 +8,11 @@ Aplicaciones web interactivas y quizzes de repaso construidos a partir de los **
 
 ## ✨ Características
 
-- ✅ **Autoevaluación con feedback inmediato**: razonamientos y pistas para cada ejercicio.
-- 💬 **Enfoque en intenciones comunicativas**: las respuestas cortas se evalúan por transmisión clara del mensaje (nivel B1.1, Marco Común Europeo), tal como en las evaluaciones orales y escritas de la UTN.
-- 📚 **Syllabi abiertos** en [`/syllabi/`](syllabi/) (Markdown / PDF) para descargar o contribuir.
-- 🚀 **Deploy automático a GitHub Pages** en cada push a `main` (GitHub Actions).
-- ♿ **Accesibilidad WCAG 2.1 AA**: skip-links, foco visible, `aria-disabled` en cursos no disponibles y soporte para lectores de pantalla.
-- 🔒 **Seguridad**: Content Security Policy (CSP), `rel="noopener noreferrer"` en enlaces externos y sin dependencias de runtime.
+-  **Autoevaluación con feedback inmediato**: razonamientos y pistas para cada ejercicio.
+-  **Enfoque en intenciones comunicativas**: las respuestas cortas se evalúan por transmisión clara del mensaje (nivel B1.1, Marco Común Europeo), tal como en las evaluaciones orales y escritas de la UTN.
+-  **Syllabi abiertos** en [`/syllabi/`](syllabi/) (Markdown / PDF) para descargar o contribuir.
+-  **Deploy automático a GitHub Pages** en cada push a `main` (GitHub Actions).
+-  **Seguridad**: Content Security Policy (CSP), `rel="noopener noreferrer"` en enlaces externos y sin dependencias de runtime.
 
 ## LINK AL PROYECTO
 https://kend07.github.io/ETE-for-Profficiency-Tests/
