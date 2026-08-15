@@ -6,7 +6,7 @@
 
 Aplicaciones web interactivas y quizzes de repaso construidos a partir de los **syllabus oficiales** de los cursos. Todo el material es **gratuito, abierto y colaborativo** (Licencia MIT), desplegado automáticamente en **GitHub Pages**.
 
-## ✨ Características
+##  Características
 
 -  **Autoevaluación con feedback inmediato**: razonamientos y pistas para cada ejercicio.
 -  **Enfoque en intenciones comunicativas**: las respuestas cortas se evalúan por transmisión clara del mensaje (nivel B1.1, Marco Común Europeo), tal como en las evaluaciones orales y escritas de la UTN.
